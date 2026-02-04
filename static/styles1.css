@@ -1,0 +1,1600 @@
+/* =========================================================
+   FIFTH FORMAT — TEAL PRIMARY THEME (LIGHTER BACKGROUND)
+   ========================================================= */
+
+/* ------------------------------
+   Base
+------------------------------ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+
+    /* NEW LIGHTER TEAL BACKGROUND */
+    background: radial-gradient(circle at top,
+            #0a1a23 0%,
+            #00141c 55%,
+            #000a0d 100%);
+    color: #dffcff;
+    min-height: 100vh;
+}
+
+.page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+}
+
+/* ------------------------------
+   Top navigation
+------------------------------ */
+
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    gap: 16px;
+}
+
+.logo-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* teal-dominant logo dot, purple accent glow */
+.logo-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    background: conic-gradient(from 120deg,
+            #38e0f4,
+            #a855f7,
+            #4be7ef);
+    box-shadow: 0 0 18px rgba(56, 240, 248, 0.45);
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand {
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+}
+
+.tagline {
+    font-size: 0.8rem;
+    opacity: 0.72;
+}
+
+/* meta pill with teal fog */
+.top-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.meta-pill {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(150, 220, 235, 0.35);
+    background: radial-gradient(circle at top left,
+            rgba(56, 231, 245, 0.1),
+            transparent);
+    backdrop-filter: blur(10px);
+}
+
+/* ------------------------------
+   Hero layout
+------------------------------ */
+
+.hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 24px;
+    margin-bottom: 20px;
+}
+
+.hero-copy h1 {
+    font-size: clamp(1.8rem, 2.4vw, 2.5rem);
+    line-height: 1.2;
+    margin-bottom: 16px;
+}
+
+.hero-copy p {
+    font-size: 0.95rem;
+    color: #4be7ef;
+    /* lighter teal */
+    margin-bottom: 10px;
+    max-width: 34rem;
+}
+
+.hero-note {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+/* Hero feature icons */
+
+.hero-icons {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px;
+}
+
+.hero-icon-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 14px;
+    border: 1px solid rgba(30, 60, 75, 0.9);
+    background: radial-gradient(circle at top left,
+            rgba(56, 230, 245, 0.18),
+            rgba(10, 25, 36, 0.95));
+}
+
+/* teal primary + purple accent */
+.hero-icon-badge {
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: conic-gradient(from 160deg,
+            #38e0f4,
+            #a855f7,
+            #4be7ef,
+            #38e0f4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 16px rgba(56, 235, 248, 0.7);
+}
+
+.hero-icon-symbol {
+    font-size: 1rem;
+    color: #002128;
+}
+
+.hero-icon-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.hero-icon-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.hero-icon-sub {
+    font-size: 0.72rem;
+    opacity: 0.85;
+}
+
+/* ------------------------------
+   Right-side hero block
+------------------------------ */
+
+.hero-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+/* Logo container */
+.hero-art {
+    position: relative;
+    border-radius: 20px;
+    padding: 18px;
+    overflow: hidden;
+
+    /* teal border */
+    border: 1px solid rgba(56, 230, 245, 0.7);
+
+    /* lighter teal background */
+    background: radial-gradient(circle at center,
+            rgba(10, 25, 36, 1),
+            rgba(10, 25, 36, 0.2));
+
+    box-shadow:
+        0 18px 40px rgba(10, 25, 36, 0.95),
+        0 0 40px rgba(56, 240, 248, 0.35);
+}
+
+.hero-logo {
+    display: block;
+    max-width: 100%;
+    border-radius: 16px;
+    margin: 0 auto;
+    filter: drop-shadow(0 0 24px rgba(56, 240, 248, 0.6));
+}
+
+/* glowing teal orbits */
+
+.hero-art-orbit {
+    position: absolute;
+    border-radius: 999px;
+    border: 1px solid rgba(74, 245, 255, 0.5);
+    box-shadow: 0 0 40px rgba(74, 245, 255, 0.35);
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.hero-art-orbit-outer {
+    inset: -20%;
+}
+
+.hero-art-orbit-inner {
+    inset: 10%;
+    filter: blur(1px);
+}
+
+/* ------------------------------
+   Player UI (Now Playing)
+------------------------------ */
+
+.hero-player {
+    border-radius: 18px;
+    padding: 18px 18px 20px;
+    border: 1px solid rgba(150, 220, 235, 0.5);
+    background: radial-gradient(circle at top left,
+            rgba(56, 231, 245, 0.25),
+            rgba(10, 25, 36, 0.9));
+    box-shadow:
+        0 18px 40px rgba(10, 25, 36, 0.9),
+        0 0 40px rgba(56, 243, 255, 0.18);
+}
+
+.hero-player-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 18px;
+}
+
+.hero-player .badge {
+    align-self: flex-start;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-radius: 999px;
+    border: 1px solid rgba(225, 240, 245, 0.45);
+}
+
+.hero-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.hero-player .sub {
+    font-size: 0.8rem;
+    opacity: 0.82;
+}
+
+.now-playing {
+    border-radius: 12px;
+    padding: 12px 12px 10px;
+    border: 1px solid rgba(10, 25, 36, 0.6);
+    background: linear-gradient(135deg,
+            rgba(10, 25, 36, 0.95),
+            rgba(37, 205, 232, 0.55));
+    margin-bottom: 12px;
+}
+
+.now-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 8px;
+}
+
+.np-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    opacity: 0.72;
+}
+
+.np-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.np-sub {
+    font-size: 0.8rem;
+    opacity: 0.82;
+}
+
+/* Visualizer bars in teal */
+.np-visualizer {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+}
+
+.np-visualizer .bar {
+    width: 4px;
+    height: 12px;
+    border-radius: 999px;
+    background: rgba(56, 240, 248, 0.8);
+    animation: pulse 1s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scaleY(0.5);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: scaleY(1.4);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scaleY(0.4);
+        opacity: 0.5;
+    }
+}
+
+.np-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* ------------------------------
+   Buttons — TEAL primary / purple accent
+------------------------------ */
+
+.btn {
+    border-radius: 999px;
+    border: 1px solid rgba(150, 220, 235, 0.45);
+    padding: 8px 16px;
+    font-size: 0.8rem;
+    background: rgba(50, 216, 238, 0.85);
+    cursor: pointer;
+    transition:
+        transform 0.08s ease,
+        box-shadow 0.08s ease,
+        border-color 0.08s ease;
+}
+
+.btn.primary {
+    background: linear-gradient(135deg,
+            #38e0f4,
+            #a855f7);
+    /* subtle purple accent */
+
+    border-color: transparent;
+    color: #002128;
+    font-weight: 600;
+    box-shadow: 0 10px 24px rgba(56, 240, 248, 0.45);
+}
+
+.btn.ghost {
+    background: rgba(10, 25, 36, 0.85);
+    color: #dffcff;
+}
+
+.btn.small {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+}
+
+.btn.full {
+    width: 100%;
+    justify-content: center;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 18px rgba(10, 25, 36, 0.7);
+    border-color: rgba(168, 237, 255, 0.85);
+}
+
+.btn.primary:hover {
+    box-shadow: 0 12px 26px rgba(56, 245, 255, 0.7);
+}
+
+/* Purple accent version of the small "Play Experience" button */
+.btn.small.play-exp {
+    background: #a855f7;
+    border-color: #d8c2ff;
+    color: #4be7ef;
+    box-shadow: 0 6px 16px rgba(168, 85, 247, 0.45);
+}
+
+.btn.small.play-exp:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(168, 85, 247, 0.7);
+    border-color: #efd8ff;
+}
+
+/* ------------------------------
+   Filters
+------------------------------ */
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 28px 0 18px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.filter-group label {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.filter-group select,
+.filter-group input {
+    background: rgba(10, 25, 36, 0.9);
+    border-radius: 999px;
+    border: 1px solid rgba(27, 75, 90, 0.9);
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    color: #dffcff;
+    min-width: 160px;
+}
+
+/* ------------------------------
+   Experiences grid
+------------------------------ */
+
+.experiences h2 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #bffaff;
+}
+
+.exp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.exp-card {
+    position: relative;
+    padding: 14px 14px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(27, 75, 90, 0.8);
+    background: radial-gradient(circle at top left,
+            rgba(10, 25, 36, 0.95),
+            rgba(10, 25, 36, 0.78));
+
+    box-shadow: 0 12px 26px rgba(10, 25, 36, 0.9);
+    cursor: pointer;
+    transition:
+        transform 0.08s ease,
+        box-shadow 0.08s ease,
+        border-color 0.08s ease;
+}
+
+.exp-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(56, 230, 245, 0.6);
+    box-shadow:
+        0 14px 28px rgba(10, 25, 36, 0.95),
+        0 0 20px rgba(56, 235, 245, 0.3);
+}
+
+.exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.exp-id {
+    font-size: 0.75rem;
+    opacity: 0.72;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.exp-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #c9fbff;
+}
+
+.exp-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.78rem;
+    opacity: 0.82;
+    margin-bottom: 6px;
+}
+
+.exp-vibe {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+
+.exp-actions {
+    display: flex;
+    justify-content: flex-start;
+}
+/* ------------------------------
+   Upload section
+------------------------------ */
+
+.upload {
+    margin-top: 36px;
+}
+
+.upload-card {
+    border-radius: 18px;
+    padding: 18px 18px 16px;
+    border: 1px solid rgba(150, 220, 235, 0.55);
+    background: radial-gradient(circle at top left,
+            rgba(56, 231, 245, 0.14),
+            rgba(10, 25, 36, 0.96));
+    box-shadow: 0 14px 30px rgba(10, 25, 36, 0.9);
+}
+
+.upload-card h2 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: #c9fbff;
+}
+
+.upload-card p {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    margin-bottom: 12px;
+}
+
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.field label {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.field input[type="text"],
+.field input[type="file"] {
+    background: rgba(10, 25, 36, 0.95);
+    border-radius: 10px;
+    border: 1px solid rgba(27, 75, 90, 0.9);
+    font-size: 0.8rem;
+    color: #dffcff;
+    padding: 6px 9px;
+}
+
+.upload-note {
+    font-size: 0.75rem;
+    opacity: 0.72;
+}
+
+/* ------------------------------
+   Experience detail overlay
+------------------------------ */
+
+.exp-detail-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 40;
+}
+
+.exp-detail-overlay.open {
+    display: flex;
+}
+
+.exp-detail-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 25, 36, 0.92);
+    backdrop-filter: blur(10px);
+}
+
+.exp-detail-dialog {
+    position: relative;
+    width: min(720px, 100% - 32px);
+    border-radius: 24px;
+    padding: 20px;
+    border: 1px solid rgba(150, 220, 235, 0.6);
+    background: radial-gradient(circle at top left,
+            rgba(10, 25, 36, 1),
+            rgba(10, 25, 36, 0.96));
+    box-shadow: 0 24px 60px rgba(10, 25, 36, 0.9);
+    z-index: 1;
+}
+
+.exp-detail-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: center;
+}
+
+.exp-detail-close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    border: none;
+    background: transparent;
+    color: #dffcff;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+.exp-detail-art {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Circular progress ring */
+.exp-progress-ring {
+    --progress: 0deg;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+
+    padding: 6px;
+    background: conic-gradient(#38e0f4 var(--progress),
+            rgba(168, 85, 247, 0.55) var(--progress));
+
+    box-shadow: 0 0 40px rgba(56, 240, 248, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.exp-progress-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at center,
+            rgba(10, 25, 36, 1),
+            rgba(10, 25, 36, 0.9));
+
+    border: 1px solid rgba(150, 220, 235, 0.5);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px;
+}
+
+.exp-detail-logo {
+    width: 72%;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 18px rgba(56, 240, 248, 0.6));
+}
+
+.exp-detail-play-btn {
+    margin-top: 4px;
+    border-radius: 999px;
+    border: 1px solid rgba(225, 240, 245, 0.7);
+    padding: 6px 18px;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(10, 25, 36, 0.95);
+    color: #dffcff;
+    cursor: pointer;
+}
+
+.exp-detail-play-btn:hover {
+    border-color: #e3c9ff;
+    box-shadow: 0 0 18px rgba(168, 85, 247, 0.6);
+}
+
+.exp-detail-meta h3 {
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+    color: #c9fbff;
+}
+
+.exp-detail-id {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.exp-detail-line {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.exp-detail-vibe {
+    font-size: 0.85rem;
+    margin-top: 10px;
+    opacity: 0.9;
+}
+
+/* Lyric visual */
+.exp-lyrics-visual {
+    margin-top: 14px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(27, 154, 212, 0.65);
+    background: radial-gradient(circle at top left,
+            rgba(27, 154, 212, 0.55),
+            rgba(10, 25, 36, 0.96));
+    box-shadow: 0 0 28px rgba(56, 235, 245, 0.28);
+    max-height: 190px;
+    overflow: hidden;
+}
+
+.exp-lyric-placeholder {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.exp-lyric-line {
+    font-size: 0.82rem;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    transform-origin: left center;
+    transition:
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        filter 0.18s ease;
+}
+
+.exp-lyric-line.past {
+    opacity: 0.35;
+    transform: translateY(-1px) scale(0.98);
+}
+
+.exp-lyric-line.active {
+    opacity: 1;
+    font-weight: 600;
+    filter: drop-shadow(0 0 10px rgba(56, 240, 248, 0.85));
+    transform: translateY(0) scale(1.02);
+}
+
+.exp-lyric-line.future {
+    opacity: 0.6;
+    transform: translateY(1px) scale(0.99);
+}
+
+@media (max-width: 720px) {
+    .exp-detail-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .exp-progress-ring {
+        width: 220px;
+        height: 220px;
+    }
+}
+
+/* ------------------------------
+   Gate (Access Code) page
+------------------------------ */
+
+.gate-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.gate-card {
+    max-width: 360px;
+    width: 100%;
+    padding: 24px 20px 20px;
+    border-radius: 18px;
+    border: 1px solid rgba(150, 220, 235, 0.55);
+    background: radial-gradient(circle at top left,
+            rgba(56, 231, 245, 0.18),
+            rgba(10, 25, 36, 0.96));
+    box-shadow: 0 20px 40px rgba(10, 25, 36, 0.9);
+    text-align: center;
+}
+
+.gate-card h1 {
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+    color: #c9fbff;
+}
+
+.gate-sub {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    margin-bottom: 14px;
+}
+
+.gate-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.gate-input {
+    background: rgba(10, 25, 36, 0.95);
+    border-radius: 999px;
+    border: 1px solid rgba(27, 75, 90, 0.9);
+    font-size: 0.9rem;
+    color: #dffcff;
+    padding: 8px 12px;
+    text-align: center;
+}
+
+.gate-error {
+    font-size: 0.8rem;
+    color: #ffb3b3;
+}
+
+/* =========================================================
+   FIFTH FORMAT FORGE — Lyric-to-Experience Page
+   ========================================================= */
+
+.hero--forge {
+    margin-bottom: 24px;
+}
+
+.hero--forge .hero-note {
+    max-width: 32rem;
+    color: #4be7ef;
+}
+
+.hero-actions {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Forge Logo Overlay */
+.forge-art {
+    position: relative;
+}
+
+.forge-art-overlay {
+    position: absolute;
+    left: 16px;
+    bottom: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.forge-chip {
+    font-size: 0.7rem;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(225, 240, 245, 0.7);
+    background: rgba(10, 25, 36, 0.9);
+    color: #c9fbff;
+}
+
+.forge-chip-secondary {
+    border-color: rgba(248, 250, 252, 0.25);
+    opacity: 0.75;
+}
+
+/* Forge main layout */
+.forge-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.3fr);
+    gap: 18px;
+    margin-top: 4px;
+}
+
+.forge-panel {
+    border-radius: 18px;
+    border: 1px solid rgba(150, 220, 235, 0.55);
+    background: radial-gradient(circle at top left,
+            rgba(56, 231, 245, 0.16),
+            rgba(10, 25, 36, 0.98));
+    box-shadow: 0 16px 32px rgba(10, 25, 36, 0.95);
+    padding: 16px 16px 14px;
+}
+
+.forge-panel-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 10px;
+}
+
+.forge-panel-header h2 {
+    font-size: 0.95rem;
+    color: #c9fbff;
+}
+
+.forge-panel-sub {
+    font-size: 0.78rem;
+    opacity: 0.75;
+}
+
+/* ------------------------------
+   Tabs
+------------------------------ */
+
+.forge-tabs {
+    display: inline-flex;
+    gap: 4px;
+    margin-bottom: 10px;
+    border-radius: 999px;
+    padding: 2px;
+    background: rgba(10, 25, 36, 0.85);
+    border: 1px solid rgba(27, 154, 212, 0.9);
+    /* teal border */
+}
+
+.forge-tab {
+    border: none;
+    background: transparent;
+    color: #dffcff;
+    font-size: 0.75rem;
+    padding: 5px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    opacity: 0.75;
+}
+
+.forge-tab.active {
+    background: linear-gradient(135deg,
+            #38e0f4,
+            #a855f7);
+    /* teal → subtle purple */
+    color: #002128;
+    opacity: 1;
+}
+
+/* ------------------------------
+   Lyrics Panel
+------------------------------ */
+
+.forge-lyrics-body {
+    margin-top: 8px;
+}
+
+.forge-lyrics-textarea {
+    width: 100%;
+    min-height: 220px;
+    border-radius: 12px;
+    border: 1px solid rgba(27, 75, 90, 0.9);
+    background: rgba(10, 25, 36, 0.98);
+    font-size: 0.8rem;
+    color: #dffcff;
+    padding: 10px 10px 9px;
+    resize: vertical;
+}
+
+.forge-lyrics-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.forge-meta-pill {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(150, 220, 235, 0.6);
+    background: rgba(10, 25, 36, 0.92);
+    color: #c9fbff;
+}
+
+/* ------------------------------
+   Control Groups
+------------------------------ */
+
+.forge-group {
+    border-radius: 14px;
+    border: 1px solid rgba(27, 154, 212, 0.8);
+    background: radial-gradient(circle at top left,
+            rgba(10, 25, 36, 0.98),
+            rgba(10, 25, 36, 0.92));
+    padding: 10px 10px 9px;
+    margin-bottom: 10px;
+}
+
+.forge-group-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 8px;
+}
+
+.forge-group-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #9feeff;
+}
+
+.forge-group-sub {
+    font-size: 0.72rem;
+    opacity: 0.75;
+}
+
+/* ------------------------------
+   Emotion & Tone Tags (Teal)
+------------------------------ */
+
+.forge-tags-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 6px;
+}
+
+.forge-tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* Tag base */
+.forge-tag {
+    border-radius: 999px;
+    border: 1px solid rgba(150, 220, 235, 0.7);
+    background: rgba(10, 25, 36, 0.9);
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    cursor: pointer;
+    opacity: 0.9;
+    color: #9feeff;
+}
+
+.forge-tag.pill {
+    padding-inline: 12px;
+}
+
+/* Selected / Active Tag */
+.forge-tag.selected {
+    background: radial-gradient(circle at top,
+            rgba(56, 231, 245, 0.8),
+            rgba(10, 25, 36, 0.95));
+    border-color: rgba(168, 85, 247, 0.7);
+    color: #002128;
+    box-shadow: 0 0 16px rgba(56, 231, 245, 0.7);
+    opacity: 1;
+}
+
+/* ------------------------------
+   Sliders
+------------------------------ */
+
+.forge-sliders {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.forge-slider-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.forge-slider-row label {
+    font-size: 0.76rem;
+    opacity: 0.85;
+}
+
+.forge-slider-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.7rem;
+}
+
+.forge-slider-meta input[type="range"] {
+    flex: 1;
+    accent-color: #38e0f4;
+    /* teal slider */
+}
+
+.forge-slider-meta span {
+    opacity: 0.7;
+    color: #96f4ff;
+}
+
+/* ------------------------------
+   Groove / Options
+------------------------------ */
+
+.forge-options {
+    margin-top: 6px;
+}
+
+.forge-option-label {
+    font-size: 0.76rem;
+    opacity: 0.85;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.forge-options-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.forge-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    opacity: 0.85;
+    color: #c9fbff;
+}
+
+.forge-radio input {
+    accent-color: #38e0f4;
+    /* teal radio */
+}
+
+/* ------------------------------
+   Instrument Toggles
+------------------------------ */
+
+.forge-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.forge-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.74rem;
+    color: #c9fbff;
+}
+
+.forge-toggle input {
+    accent-color: #a855f7;
+    /* purple accent */
+}
+
+/* ------------------------------
+   Intensity Curve (Timeline)
+------------------------------ */
+
+.forge-timeline {
+    margin-top: 6px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+}
+
+.forge-timeline-step {
+    font-size: 0.7rem;
+    padding: 4px 6px;
+    border-radius: 999px;
+    text-align: center;
+
+    border: 1px solid rgba(150, 220, 235, 0.6);
+    background: rgba(10, 25, 36, 0.9);
+    color: #c9fbff;
+    opacity: 0.8;
+}
+
+.forge-timeline-step.active {
+    border-color: #a855f7;
+    /* purple accent */
+    background: radial-gradient(circle at top,
+            rgba(168, 85, 247, 0.6),
+            rgba(10, 25, 36, 0.98));
+    box-shadow: 0 0 16px rgba(168, 85, 247, 0.7);
+    opacity: 1;
+}
+
+/* ------------------------------
+   Footer Bar
+------------------------------ */
+
+.forge-footer-bar {
+    margin-top: 20px;
+    padding: 12px 14px;
+    border-radius: 16px;
+
+    border: 1px solid rgba(150, 220, 235, 0.55);
+    background: radial-gradient(circle at top left,
+            rgba(56, 231, 245, 0.18),
+            rgba(10, 25, 36, 0.98));
+
+    box-shadow: 0 18px 32px rgba(10, 25, 36, 0.96);
+
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+}
+
+.forge-footer-left {
+    max-width: 480px;
+}
+
+.forge-footer-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    opacity: 0.8;
+    color: #9feeff;
+}
+
+.forge-footer-text {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    color: #c9fbff;
+}
+
+.forge-footer-right {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+/* ------------------------------
+   Global Dials
+------------------------------ */
+
+.forge-dials-group {
+    margin-bottom: 10px;
+}
+
+.forge-dials-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.forge-dial {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.forge-dial label {
+    font-size: 0.76rem;
+    opacity: 0.85;
+    color: #c9fbff;
+}
+
+/* ------------------------------
+   Knobs Section
+------------------------------ */
+
+.forge-knobs-section {
+    margin-top: 10px;
+}
+
+.forge-knobs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.forge-knob {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    color: #c9fbff;
+}
+
+.forge-knob>label {
+    opacity: 0.85;
+    text-align: center;
+}
+
+/* Circular knob body */
+.forge-knob-control {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    padding: 6px;
+
+    background: conic-gradient(from 220deg,
+            rgba(56, 231, 245, 0.8),
+            rgba(168, 85, 247, 0.7),
+            rgba(56, 231, 245, 0.85),
+            rgba(10, 25, 36, 1));
+
+    box-shadow:
+        0 0 18px rgba(56, 231, 245, 0.6),
+        0 10px 18px rgba(10, 25, 36, 0.9);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.forge-knob-control::before {
+    content: "";
+    position: absolute;
+    inset: 7px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center,
+            rgba(10, 25, 36, 1),
+            rgba(10, 25, 36, 0.9));
+    border: 1px solid rgba(150, 220, 235, 0.7);
+}
+
+/* Slider inside knob */
+.forge-knob-slider {
+    position: relative;
+    z-index: 1;
+    width: 44px;
+    height: 44px;
+    transform: rotate(-90deg);
+    appearance: none;
+    background: transparent;
+    outline: none;
+}
+
+/* Track */
+.forge-knob-slider::-webkit-slider-runnable-track,
+.forge-knob-slider::-moz-range-track {
+    height: 4px;
+    background: transparent;
+}
+
+/* Thumb */
+.forge-knob-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #e3c9ff;
+    /* soft purple */
+    box-shadow:
+        0 0 10px rgba(240, 245, 255, 0.9),
+        0 0 16px rgba(168, 85, 247, 0.8);
+    cursor: pointer;
+}
+
+.forge-knob-slider::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background: #e3c9ff;
+    box-shadow:
+        0 0 10px rgba(240, 245, 255, 0.9),
+        0 0 16px rgba(168, 85, 247, 0.8);
+    cursor: pointer;
+}
+
+/* ------------------------------
+   Mixer / Noise Bed
+------------------------------ */
+
+.forge-mixer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.forge-mixer-channel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.forge-mixer-label {
+    font-size: 0.72rem;
+    opacity: 0.9;
+    text-align: center;
+    color: #c9fbff;
+}
+
+/* Vertical faders */
+.forge-mixer-fader {
+    writing-mode: bt-lr;
+    transform: rotate(-90deg);
+    width: 80px;
+    height: 80px;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+/* Track */
+.forge-mixer-fader::-webkit-slider-runnable-track {
+    height: 4px;
+    background: linear-gradient(to right,
+            rgba(10, 25, 36, 1),
+            rgba(56, 231, 245, 0.9),
+            rgba(10, 25, 36, 1));
+    border-radius: 999px;
+}
+
+.forge-mixer-fader::-moz-range-track {
+    height: 4px;
+    background: linear-gradient(to right,
+            rgba(10, 25, 36, 1),
+            rgba(56, 231, 245, 0.9),
+            rgba(10, 25, 36, 1));
+    border-radius: 999px;
+}
+
+/* Thumb */
+.forge-mixer-fader::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: #38e0f4;
+    /* teal */
+    box-shadow:
+        0 0 10px rgba(240, 250, 252, 0.9),
+        0 0 18px rgba(56, 231, 245, 0.9);
+    margin-top: -4px;
+}
+
+.forge-mixer-fader::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    border: none;
+    background: #38e0f4;
+    box-shadow:
+        0 0 10px rgba(240, 250, 252, 0.9),
+        0 0 18px rgba(56, 231, 245, 0.9);
+}
+
+/* ------------------------------
+   Real-World Noise Grid
+------------------------------ */
+
+.forge-realworld-grid {
+    margin-top: 6px;
+}
+
+/* ------------------------------
+   Model & Voice Stack
+------------------------------ */
+
+.forge-model-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.forge-model-block {
+    padding: 10px;
+    border-radius: 16px;
+    border: 1px solid rgba(27, 154, 212, 0.9);
+    background: radial-gradient(circle at top left,
+            rgba(27, 154, 212, 0.25),
+            rgba(10, 25, 36, 0.95));
+    box-shadow: 0 0 18px rgba(10, 25, 36, 0.9);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.forge-model-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #bffaff;
+}
+
+.forge-model-label {
+    font-size: 0.72rem;
+    opacity: 0.9;
+    color: #c9fbff;
+}
+
+.forge-model-input {
+    margin-top: 2px;
+    margin-bottom: 4px;
+    padding: 5px 8px;
+    font-size: 0.78rem;
+    border-radius: 999px;
+    border: 1px solid rgba(150, 220, 235, 0.6);
+    background: rgba(10, 25, 36, 0.9);
+    color: #dffcff;
+}
+
+.forge-model-input:focus-visible {
+    outline: none;
+    border-color: rgba(27, 154, 212, 0.9);
+    box-shadow: 0 0 0 1px rgba(27, 154, 212, 0.9);
+}
+
+.forge-model-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.forge-model-inline {
+    flex: 1 1 160px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ------------------------------
+   Responsive Tweaks
+------------------------------ */
+
+@media (max-width: 900px) {
+    .forge-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 720px) {
+    .forge-footer-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ------------------------------
+   Footer
+------------------------------ */
+
+.footer {
+    margin-top: 32px;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    text-align: center;
+    color: #9adff1;
+}

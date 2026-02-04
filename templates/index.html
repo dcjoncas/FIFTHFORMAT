@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fifth Format – Experiences</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <div class="page">
+      <!-- Top navigation -->
+      <header class="top-nav">
+        <div class="logo-block">
+          <div class="logo-dot"></div>
+          <div class="logo-text">
+            <span class="brand">Fifth Format</span>
+            <span class="tagline">
+              Human-written lyrics • AI-performed audio
+            </span>
+          </div>
+        </div>
+
+        <div class="top-meta">
+          <span class="meta-pill">A Fifth Format Company</span>
+          <span class="meta-pill">by W. Wolf</span>
+          <span class="meta-pill">featuring Kersali</span>
+          <a href="{{ url_for('forge') }}" class="meta-pill">The Forge</a>
+          <a href="{{ url_for('config_page') }}" class="meta-pill">Config</a>
+        </div>
+      </header>
+
+      <main>
+        <!-- Hero section: copy + logo -->
+        <section class="hero">
+          <!-- Left: concept copy + feature icons -->
+          <div class="hero-copy">
+            <h1>
+              Not a band. Not a playlist.<br />
+              A new audio format.
+            </h1>
+
+            <p>
+              Fifth Format is a modern way to release music: every lyric is
+              written by a human, rendered through AI voices and sound design.
+              It’s not here to compete with musicians – it lives beside them as
+              its own medium.
+            </p>
+
+            <p class="hero-note">
+              Select an Experience, hit play, and fall into the world of W. Wolf
+              and Kersali.
+            </p>
+
+            <!-- Feature icons -->
+            <div class="hero-icons">
+              <div class="hero-icon-card">
+                <div class="hero-icon-badge">
+                  <span class="hero-icon-symbol">✍</span>
+                </div>
+                <div class="hero-icon-text">
+                  <div class="hero-icon-title">Human-written lyrics</div>
+                  <div class="hero-icon-sub">
+                    Every line starts with a pen, not a prompt.
+                  </div>
+                </div>
+              </div>
+
+              <div class="hero-icon-card">
+                <div class="hero-icon-badge">
+                  <span class="hero-icon-symbol">⌁</span>
+                </div>
+                <div class="hero-icon-text">
+                  <div class="hero-icon-title">AI performance</div>
+                  <div class="hero-icon-sub">
+                    Custom voices and sound design carry the story.
+                  </div>
+                </div>
+              </div>
+
+              <div class="hero-icon-card">
+                <div class="hero-icon-badge">
+                  <span class="hero-icon-symbol">∞</span>
+                </div>
+                <div class="hero-icon-text">
+                  <div class="hero-icon-title">New medium</div>
+                  <div class="hero-icon-sub">
+                    Not a band or DJ set – a Fifth Format Experience.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: logo art, centered -->
+          <div class="hero-visual">
+            <div class="hero-art">
+              <div class="hero-art-orbit hero-art-orbit-outer"></div>
+              <div class="hero-art-orbit hero-art-orbit-inner"></div>
+
+              <img
+                src="{{ url_for('static', filename='fifth-format-cover.png') }}"
+                alt="Fifth Format by W. Wolf – music in a new medium"
+                class="hero-logo"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Filters -->
+        <section class="filters">
+          <div class="filter-group">
+            <label for="author-filter">Author</label>
+            <select id="author-filter">
+              <option value="">All</option>
+              {% for author in authors %}
+              <option value="{{ author }}">{{ author }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="voice-filter">Voice</label>
+            <select id="voice-filter">
+              <option value="">All</option>
+              {% for voice in voices %}
+              <option value="{{ voice }}">{{ voice }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="search-filter">Search</label>
+            <input
+              id="search-filter"
+              type="text"
+              placeholder="Title, vibe, EXP id..."
+            />
+          </div>
+        </section>
+
+        <!-- Experiences by package -->
+        <section class="experiences">
+          <h2>Experiences</h2>
+
+          <!-- Keep id="exp-grid" so existing JS still works -->
+          <div class="exp-packages" id="exp-grid">
+            {% for pkg in packages %} {% set is_core = (pkg.package == 'EXP –
+            Fifth Format Core') %}
+
+            <section
+              class="exp-package{% if is_core %} exp-package-core{% endif %} is-collapsed"
+              data-package="{{ pkg.package }}"
+              data-author="{{ pkg.author }}"
+            >
+              <!-- Whole package is now a single card container -->
+              <div
+                class="exp-package-card"
+                {%
+                if
+                is_core
+                %}data-core-toggle="true"
+                {%
+                endif
+                %}
+              >
+                <!-- Package header row: triangle + text -->
+                <div class="exp-package-header">
+                  <div class="exp-package-triangle"></div>
+                  <div class="exp-package-text">
+                    <p class="exp-package-label">Experience Package</p>
+                    <h3 class="exp-package-title">{{ pkg.package }}</h3>
+                    <p class="exp-package-author">by {{ pkg.author }}</p>
+                    <p class="exp-package-voice">Voice: {{ pkg.voice }}</p>
+                    <p class="exp-package-count">
+                      {{ pkg.experiences|length }} tracks
+                    </p>
+                    {% if is_core %}
+                    <p class="exp-package-hint">
+                      Click to reveal core Experiences (EXP-01–EXP-05)
+                    </p>
+                    {% endif %}
+                  </div>
+                </div>
+                <!-- Songs within this package, visually inside the card -->
+                <div
+                  class="exp-grid-inner{% if is_core %} exp-grid-inner-core{% endif %}"
+                >
+                  {% for exp in pkg.experiences %}
+                  <article
+                    class="exp-card"
+                    data-author="{{ exp.author }}"
+                    data-voice="{{ exp.voice }}"
+                    data-title="{{ exp.title }}"
+                    data-vibe="{{ exp.vibe }}"
+                    data-id="{{ exp.id }}"
+                    data-package="{{ exp.package }}"
+                    data-src="{{ url_for('static', filename=exp.file) }}"
+                    data-lyrics="{{ url_for('static', filename=exp.lyrics) }}"
+                  >
+                    <div class="exp-header">
+                      <span class="exp-id">{{ exp.id }}</span>
+                      <span class="exp-title">{{ exp.title }}</span>
+                    </div>
+
+                    <div class="exp-meta">
+                      <span>Written by {{ exp.author }}</span>
+                      <span>Voice: {{ exp.voice }}</span>
+                    </div>
+
+                    <p class="exp-vibe">{{ exp.vibe }}</p>
+
+                    <div class="exp-actions">
+                      <a
+                        class="btn small play-exp"
+                        href="{{ url_for('experience_player', exp_id=exp.id) }}"
+                        >Play Experience</a
+                      >
+
+                      {# Delete button only for uploaded (non-base) experiences.
+                      Base EXPS are EXP-01..EXP-05. #} {% if
+                      exp.file.startswith('experiences/') and exp.id not in [
+                      'EXP-01','EXP-02','EXP-03','EXP-04','EXP-05' ] %}
+                      <form
+                        action="{{ url_for('delete_experience', exp_id=exp.id) }}"
+                        method="post"
+                        class="exp-delete-form"
+                        onsubmit="return confirm('Delete {{ exp.title }}?');"
+                      >
+                        <button type="submit" class="btn ghost small">
+                          Delete
+                        </button>
+                      </form>
+                      {% endif %}
+                    </div>
+                  </article>
+                  {% endfor %}
+                </div>
+              </div>
+            </section>
+            {% endfor %}
+          </div>
+        </section>
+
+        <!-- Upload: share new Experiences -->
+        <section class="upload">
+          <div class="upload-card">
+            <h2>Share Your Experience</h2>
+
+            <p>
+              Want to explore this medium yourself? Upload a track with your own
+              human-written lyrics and let the system render it as an
+              Experience.
+            </p>
+
+            <form
+              action="{{ url_for('upload') }}"
+              method="post"
+              enctype="multipart/form-data"
+              class="upload-form"
+            >
+              <div class="field-row">
+                <div class="field">
+                  <label for="title">Experience title</label>
+                  <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="These Days"
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="author">Author</label>
+                  <input
+                    type="text"
+                    id="author"
+                    name="author"
+                    placeholder="Your name"
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="voice">Voice / Project name</label>
+                  <input
+                    type="text"
+                    id="voice"
+                    name="voice"
+                    placeholder="Custom AI voice"
+                  />
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="package">Experience package</label>
+                <input
+                  type="text"
+                  id="package"
+                  name="package"
+                  placeholder="EXP – These Days (Vol. 1)"
+                />
+                <p class="upload-hint">
+                  Songs uploaded with the same package name will appear grouped
+                  together in a shared Experience package.
+                </p>
+              </div>
+
+              <div class="field">
+                <label for="file">Audio file (mp3 / wav / ogg / m4a)</label>
+                <input
+                  type="file"
+                  id="file"
+                  name="file"
+                  accept=".mp3,.wav,.ogg,.m4a"
+                  required
+                />
+                <p class="upload-hint">
+                  For lyrics, place a <code>.txt</code> file in
+                  <code>static/experiences/</code> with the
+                  <strong>same name as your original audio</strong>. For
+                  example: <code>These days.mp3</code> →
+                  <code>These days.txt</code>.
+                </p>
+              </div>
+
+              <button type="submit" class="btn primary full">
+                Upload Experience
+              </button>
+            </form>
+
+            <p class="upload-note">
+              Fifth Format principle: all lyrics must be human-written. Audio
+              can be AI-generated or human – the mix is the art.
+            </p>
+          </div>
+        </section>
+
+        <!-- Experience detail overlay -->
+        <div class="exp-detail-overlay" id="exp-detail">
+          <div class="exp-detail-backdrop"></div>
+
+          <div class="exp-detail-dialog">
+            <button class="exp-detail-close" id="exp-detail-close">×</button>
+
+            <div class="exp-detail-layout">
+              <div class="exp-detail-art">
+                <div class="exp-progress-ring" id="exp-progress-ring">
+                  <div class="exp-progress-inner">
+                    <img
+                      src="{{ url_for('static', filename='fifth-format-cover.png') }}"
+                      alt="Fifth Format Experience"
+                      class="exp-detail-logo"
+                    />
+                    <button
+                      class="exp-detail-play-btn"
+                      id="exp-detail-play"
+                      type="button"
+                    >
+                      Play / Pause
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="exp-detail-meta">
+                <h3 id="exp-detail-title">Experience title</h3>
+                <p class="exp-detail-id" id="exp-detail-id">EXP-XX</p>
+                <p class="exp-detail-line" id="exp-detail-author">
+                  Written by —
+                </p>
+                <p class="exp-detail-line" id="exp-detail-voice">Voice —</p>
+                <p class="exp-detail-vibe" id="exp-detail-vibe">
+                  Vibe description
+                </p>
+
+                <div class="exp-lyrics-visual" id="exp-lyrics">
+                  <p class="exp-lyric-placeholder">
+                    Lyrics visual will appear when the Experience starts.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <span>© 2025 Fifth Format · A new audio medium by W. Wolf</span>
+      </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>

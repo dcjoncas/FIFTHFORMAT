@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fifth Format – Access</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+  <div class="page gate-page">
+    <div class="gate-card">
+      <h1>Fifth Format</h1>
+      <p class="gate-sub">
+        This is a private preview Experience. Enter the access code to continue.
+      </p>
+
+      <form method="post" class="gate-form">
+        <input
+          type="password"
+          name="code"
+          placeholder="Access code"
+          class="gate-input"
+          autofocus
+        />
+        {% if error %}
+        <p class="gate-error">{{ error }}</p>
+        {% endif %}
+        <button type="submit" class="btn primary full">Enter</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

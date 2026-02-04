@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fifth Format – Lyric-to-Experience Forge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles1.css') }}"
+    />
+
+    <!-- Layout + Visualizer overrides -->
+    <style>
+      /* ===========================
+         Forge layout – 2 columns
+         =========================== */
+      .forge-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.25fr);
+        gap: 2rem;
+        align-items: flex-start;
+        margin-top: 2rem;
+      }
+
+      .forge-left .forge-panel + .forge-panel {
+        margin-top: 1.5rem;
+      }
+
+      .forge-right .forge-panel + .forge-panel {
+        margin-top: 1.5rem;
+      }
+
+      @media (max-width: 960px) {
+        .forge-layout {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      /* ===========================
+         Theme Visualizer (CANVAS)
+         =========================== */
+      #forge-visualizer-panel .forge-panel-header {
+        margin-bottom: 0.75rem;
+      }
+
+      .ff-viz {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1.5rem;
+        padding: 1rem 1.25rem;
+        background: radial-gradient(circle at top, #020617 0, #020617 65%);
+        box-shadow: 0 0 40px rgba(15, 23, 42, 0.95),
+          0 0 30px rgba(45, 212, 191, 0.15);
+        min-height: 230px;
+        display: flex;
+        align-items: stretch;
+        gap: 1.25rem;
+      }
+
+      .ff-viz-canvas {
+        flex: 1.3;
+        height: 230px;
+        border-radius: 1.25rem;
+        background: transparent;
+        display: block;
+      }
+
+      .ff-viz-legend {
+        position: relative;
+        z-index: 2;
+        flex: 0.9;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.4rem;
+        font-size: 0.8rem;
+      }
+
+      .ff-viz-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1rem;
+      }
+
+      .ff-viz-label {
+        opacity: 0.75;
+      }
+
+      .ff-viz-value {
+        font-weight: 500;
+        text-align: right;
+      }
+
+      @media (max-width: 960px) {
+        .ff-viz {
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+        .ff-viz-canvas {
+          width: 100%;
+          height: 220px;
+        }
+      }
+
+      /* Selected tag visual */
+      .forge-tag.selected,
+      .forge-tag.pill.selected {
+        background: linear-gradient(
+          135deg,
+          rgba(34, 211, 238, 0.24),
+          rgba(45, 212, 191, 0.95)
+        );
+        border-color: rgba(34, 211, 238, 0.9);
+        color: #ecfeff;
+        box-shadow: 0 0 18px rgba(45, 212, 191, 0.48),
+          0 10px 22px rgba(15, 23, 42, 0.8);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <!-- Top navigation -->
+      <header class="top-nav">
+        <div class="logo-block">
+          <div class="logo-dot"></div>
+          <div class="logo-text">
+            <span class="brand">Fifth Format</span>
+            <span class="tagline">Lyric-to-Experience Forge</span>
+          </div>
+        </div>
+
+        <div class="top-meta">
+          <span class="meta-pill">A Fifth Format Company</span>
+          <span class="meta-pill">by W. Wolf</span>
+          <span class="meta-pill">featuring Kersali</span>
+        </div>
+      </header>
+
+      <main>
+        <!-- Hero -->
+        <section class="hero hero--forge">
+          <div class="hero-copy">
+            <h1>
+              Turn lyrics into a<br />
+              full Fifth Format Experience.
+            </h1>
+
+            <p>
+              Drop in human-written lyrics, dial the emotional field and motion,
+              and export a complete instruction set for your AI engines.
+            </p>
+
+            <p class="hero-note">
+              This is a front-end demo: a control surface that will speak to
+              your real music + voice models.
+            </p>
+
+            <div class="hero-actions">
+              <a href="{{ url_for('home') }}" class="btn ghost">
+                ⬅ Back to Experiences
+              </a>
+              <button class="btn primary">Save Preset (demo)</button>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="hero-art forge-art">
+              <div class="hero-art-orbit hero-art-orbit-outer"></div>
+              <div class="hero-art-orbit hero-art-orbit-inner"></div>
+
+              <img
+                src="{{ url_for('static', filename='fifth-format-cover.png') }}"
+                alt="Fifth Format Forge"
+                class="hero-logo"
+              />
+
+              <div class="forge-art-overlay">
+                <span class="forge-chip">Lyric → Experience Engine</span>
+                <span class="forge-chip forge-chip-secondary"
+                  >Demo UI Only</span
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Forge layout -->
+        <section class="forge-layout">
+          <!-- LEFT: Lyrics + Visualizer + Experience Instruction -->
+          <div class="forge-left">
+            <!-- Lyrics panel -->
+            <div class="forge-panel forge-lyrics">
+              <div class="forge-panel-header">
+                <h2>Lyrics Input</h2>
+                <span class="forge-panel-sub"
+                  >Human-written lyrics only · Required</span
+                >
+              </div>
+
+              <div class="forge-tabs">
+                <button class="forge-tab active">Paste lyrics</button>
+                <button class="forge-tab">Load sample</button>
+              </div>
+
+              <div class="forge-lyrics-body">
+                <textarea
+                  class="forge-lyrics-textarea"
+                  id="forge-lyrics-text"
+                  placeholder="Paste your lyrics here...
+(Verse, chorus, bridge – however you write. The model will treat this as the core narrative.)"
+                ></textarea>
+
+                <div class="forge-lyrics-meta">
+                  <span class="forge-meta-pill">
+                    Tokens (approx): <strong>—</strong>
+                  </span>
+                  <span class="forge-meta-pill">
+                    Structure: <strong>Auto-detect</strong>
+                  </span>
+                  <span class="forge-meta-pill">
+                    Language: <strong>Auto</strong>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Theme Visualizer -->
+            <div class="forge-panel" id="forge-visualizer-panel">
+              <div class="forge-panel-header">
+                <h2>Theme Visualizer</h2>
+                <span class="forge-panel-sub">
+                  Animated feel of this Experience – colors = emotion,
+                  brightness = intensity, motion = tempo, spikes & symbols =
+                  tension and layers.
+                </span>
+              </div>
+
+              <div class="ff-viz" id="forge-visualizer">
+                <canvas id="ff-viz-canvas" class="ff-viz-canvas"></canvas>
+
+                <div class="ff-viz-legend">
+                  <div class="ff-viz-row">
+                    <span class="ff-viz-label">Theme</span>
+                    <span class="ff-viz-value" id="viz-theme-label">
+                      Neutral field · waiting for input…
+                    </span>
+                  </div>
+                  <div class="ff-viz-row">
+                    <span class="ff-viz-label">Energy</span>
+                    <span class="ff-viz-value" id="viz-energy-val">0.00</span>
+                  </div>
+                  <div class="ff-viz-row">
+                    <span class="ff-viz-label">Tension</span>
+                    <span class="ff-viz-value" id="viz-tension-val">0.00</span>
+                  </div>
+                  <div class="ff-viz-row">
+                    <span class="ff-viz-label">Warmth</span>
+                    <span class="ff-viz-value" id="viz-warmth-val">0.50</span>
+                  </div>
+                  <div class="ff-viz-row">
+                    <span class="ff-viz-label">Surrealism</span>
+                    <span class="ff-viz-value" id="viz-surreal-val">0.00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Experience instruction free-text (moved here under visualizer) -->
+            <div class="forge-panel forge-instruction">
+              <div class="forge-panel-header">
+                <h2>Experience Instruction (optional)</h2>
+                <span class="forge-panel-sub">
+                  Anything you’d tell a human producer: scene, story, rules.
+                </span>
+              </div>
+              <textarea
+                id="experience-instruction"
+                class="forge-lyrics-textarea"
+                placeholder="Example: This should feel like driving alone at 2AM in light rain, on the edge of a decision you cannot undo. Keep it sparse, avoid happy major chords, and let one motif repeat like a memory that won’t leave."
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- RIGHT: Mixer / Controls -->
+          <div class="forge-right">
+            <div class="forge-panel forge-controls">
+              <div class="forge-panel-header">
+                <h2>Experience Mixer</h2>
+                <span class="forge-panel-sub">
+                  Everything below feeds the visualizer and the export payload.
+                </span>
+              </div>
+
+              <!-- Emotion palette -->
+              <div class="forge-group" data-group="emotions">
+                <div class="forge-group-header">
+                  <span class="forge-group-title">Emotion Palette</span>
+                  <span class="forge-group-sub">
+                    Each selection adds its color and shape to the field.
+                  </span>
+                </div>
+                <div class="forge-tags-grid">
+                  <button class="forge-tag">Calm</button>
+                  <button class="forge-tag">Melancholy</button>
+                  <button class="forge-tag">Hopeful</button>
+                  <button class="forge-tag">Bittersweet</button>
+                  <button class="forge-tag">Triumphant</button>
+                  <button class="forge-tag">Haunted</button>
+                  <button class="forge-tag">Nostalgic</button>
+                  <button class="forge-tag">Fragile</button>
+                  <button class="forge-tag">Angry</button>
+                  <button class="forge-tag">Euphoric</button>
+                  <button class="forge-tag">Detached</button>
+                  <button class="forge-tag">Intimate</button>
+                </div>
+              </div>
+
+              <!-- Tone / atmosphere -->
+              <div class="forge-group" data-group="tone">
+                <div class="forge-group-header">
+                  <span class="forge-group-title">Tone &amp; Atmosphere</span>
+                  <span class="forge-group-sub">
+                    Pushes the palette toward dark, bright, cinematic, etc.
+                  </span>
+                </div>
+                <div class="forge-tags-row">
+                  <button class="forge-tag pill">Dark</button>
+                  <button class="forge-tag pill">Bright</button>
+                  <button class="forge-tag pill">Minimal</button>
+                  <button class="forge-tag pill">Cinematic</button>
+                  <button class="forge-tag pill">Gritty</button>
+                  <button class="forge-tag pill">Dreamlike</button>
+                  <button class="forge-tag pill">Industrial</button>
+                  <button class="forge-tag pill">Organic</button>
+                </div>
+              </div>
+
+              <!-- Tempo & rhythm -->
+              <div class="forge-group" data-group="tempo">
+                <div class="forge-group-header">
+                  <span class="forge-group-title">Tempo &amp; Rhythm</span>
+                  <span class="forge-group-sub">
+                    Drives wave speed and pulsing patterns.
+                  </span>
+                </div>
+
+                <div class="forge-sliders">
+                  <div class="forge-slider-row">
+                    <label for="forge-bpm">BPM</label>
+                    <div class="forge-slider-meta">
+                      <span>Slow</span>
+                      <input
+                        type="range"
+                        min="60"
+                        max="180"
+                        value="60"
+                        id="forge-bpm"
+                      />
+                      <span>Fast</span>
+                    </div>
+                  </div>
+
+                  <div class="forge-slider-row">
+                    <label for="forge-rhythm-density">Rhythm Density</label>
+                    <div class="forge-slider-meta">
+                      <span>Sparse</span>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value="0"
+                        id="forge-rhythm-density"
+                      />
+                      <span>Busy</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="forge-options">
+                  <span class="forge-option-label">Groove</span>
+                  <div class="forge-options-row">
+                    <label class="forge-radio">
+                      <input type="radio" name="groove" value="Straight" />
+                      <span>Straight</span>
+                    </label>
+                    <label class="forge-radio">
+                      <input type="radio" name="groove" value="Slight Swing" />
+                      <span>Slight Swing</span>
+                    </label>
+                    <label class="forge-radio">
+                      <input type="radio" name="groove" value="Heavy Swing" />
+                      <span>Heavy Swing</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Instrument layers -->
+              <div class="forge-group" data-group="instruments">
+                <div class="forge-group-header">
+                  <span class="forge-group-title">Instrument Layers</span>
+                  <span class="forge-group-sub">
+                    Each checked layer adds an orbiting symbol.
+                  </span>
+                </div>
+
+                <div class="forge-grid-2">
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-instrument="Piano / Keys" />
+                    <span>Piano / Keys</span>
+                  </label>
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-instrument="Guitar" />
+                    <span>Guitar</span>
+                  </label>
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-instrument="Synths" />
+                    <span>Synths</span>
+                  </label>
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-instrument="Bass" />
+                    <span>Bass</span>
+                  </label>
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-instrument="Drums" />
+                    <span>Drums</span>
+                  </label>
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-instrument="Strings" />
+                    <span>Strings</span>
+                  </label>
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-instrument="Vocal FX" />
+                    <span>Vocal FX</span>
+                  </label>
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-instrument="Noise / Textures" />
+                    <span>Noise / Textures</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Intensity curve -->
+              <div class="forge-group" data-group="intensity">
+                <div class="forge-group-header">
+                  <span class="forge-group-title">Intensity Curve</span>
+                  <span class="forge-group-sub">
+                    Controls brightness and depth of motion.
+                  </span>
+                </div>
+
+                <div class="forge-sliders">
+                  <div class="forge-slider-row">
+                    <label for="forge-overall-intensity"
+                      >Overall Intensity</label
+                    >
+                    <div class="forge-slider-meta">
+                      <span>Soft</span>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value="0"
+                        id="forge-overall-intensity"
+                      />
+                      <span>Maximal</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="forge-timeline" id="forge-timeline">
+                  <div class="forge-timeline-step">Soft intro</div>
+                  <div class="forge-timeline-step">Gradual build</div>
+                  <div class="forge-timeline-step">Single peak</div>
+                  <div class="forge-timeline-step">Late fade</div>
+                </div>
+              </div>
+
+              <!-- Global dials + knobs -->
+              <div class="forge-group forge-dials-group">
+                <div class="forge-group-header">
+                  <span class="forge-group-title">Global Dials</span>
+                  <span class="forge-group-sub">
+                    These heavily influence the visual field.
+                  </span>
+                </div>
+
+                <div class="forge-dials-row">
+                  <div class="forge-dial">
+                    <label>Emotion Focus</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="emotion_focus"
+                    />
+                  </div>
+                  <div class="forge-dial">
+                    <label>Tone Weight</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="tone_weight"
+                    />
+                  </div>
+                  <div class="forge-dial">
+                    <label>Rhythm Control</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="rhythm_control"
+                    />
+                  </div>
+                  <div class="forge-dial">
+                    <label>Instrumentation Blend</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="instrument_blend"
+                    />
+                  </div>
+                </div>
+
+                <div class="forge-dials-row">
+                  <div class="forge-dial">
+                    <label>Surrealism</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="surrealism"
+                    />
+                  </div>
+                  <div class="forge-dial">
+                    <label>Night Drive Factor</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="night_drive"
+                    />
+                  </div>
+                  <div class="forge-dial">
+                    <label>Glitch Spirit</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="glitch_spirit"
+                    />
+                  </div>
+                  <div class="forge-dial">
+                    <label>Cinematic Scope</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="cinematic_scope"
+                    />
+                  </div>
+                </div>
+
+                <!-- Psychoacoustic knobs -->
+                <div class="forge-knobs-section">
+                  <div class="forge-group-header">
+                    <span class="forge-group-title">Psychoacoustic Knobs</span>
+                    <span class="forge-group-sub">
+                      Drive spikes, pulses, and wobble.
+                    </span>
+                  </div>
+
+                  <div class="forge-knobs-grid">
+                    <div class="forge-knob">
+                      <div class="forge-knob-control">
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value="0"
+                          data-dial="heartbeat"
+                          class="forge-knob-slider"
+                        />
+                      </div>
+                      <label>Heartbeat</label>
+                    </div>
+
+                    <div class="forge-knob">
+                      <div class="forge-knob-control">
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value="0"
+                          data-dial="emotional_level"
+                          class="forge-knob-slider"
+                        />
+                      </div>
+                      <label>Emotional Level</label>
+                    </div>
+
+                    <div class="forge-knob">
+                      <div class="forge-knob-control">
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value="0"
+                          data-dial="fear"
+                          class="forge-knob-slider"
+                        />
+                      </div>
+                      <label>Fear</label>
+                    </div>
+
+                    <div class="forge-knob">
+                      <div class="forge-knob-control">
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value="0"
+                          data-dial="anger"
+                          class="forge-knob-slider"
+                        />
+                      </div>
+                      <label>Anger</label>
+                    </div>
+
+                    <div class="forge-knob">
+                      <div class="forge-knob-control">
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value="0"
+                          data-dial="anxiety"
+                          class="forge-knob-slider"
+                        />
+                      </div>
+                      <label>Anxiety</label>
+                    </div>
+
+                    <div class="forge-knob">
+                      <div class="forge-knob-control">
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value="0"
+                          data-dial="stress"
+                          class="forge-knob-slider"
+                        />
+                      </div>
+                      <label>Stress</label>
+                    </div>
+
+                    <div class="forge-knob">
+                      <div class="forge-knob-control">
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value="0"
+                          data-dial="trance_depth"
+                          class="forge-knob-slider"
+                        />
+                      </div>
+                      <label>Trance Depth</label>
+                    </div>
+
+                    <div class="forge-knob">
+                      <div class="forge-knob-control">
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value="0"
+                          data-dial="hypnotic_pull"
+                          class="forge-knob-slider"
+                        />
+                      </div>
+                      <label>Hypnotic Pull</label>
+                    </div>
+
+                    <div class="forge-knob">
+                      <div class="forge-knob-control">
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value="0"
+                          data-dial="adrenaline"
+                          class="forge-knob-slider"
+                        />
+                      </div>
+                      <label>Adrenaline</label>
+                    </div>
+
+                    <div class="forge-knob">
+                      <div class="forge-knob-control">
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value="0"
+                          data-dial="calm_recovery"
+                          class="forge-knob-slider"
+                        />
+                      </div>
+                      <label>Calm Recovery</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Creative switches -->
+              <div class="forge-group" data-group="creative-switches">
+                <div class="forge-group-header">
+                  <span class="forge-group-title">Creative Switches</span>
+                  <span class="forge-group-sub">
+                    Toggle extra particles / glitch shimmer.
+                  </span>
+                </div>
+
+                <div class="forge-grid-2">
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-switch="happy_accidents" />
+                    <span>Allow happy accidents</span>
+                  </label>
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-switch="analog_ghosts" />
+                    <span>Analog ghosts (tape / vinyl feel)</span>
+                  </label>
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-switch="broken_radio" />
+                    <span>Broken radio moments</span>
+                  </label>
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-switch="late_night_reverb" />
+                    <span>Late-night reverb</span>
+                  </label>
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-switch="lyric_spotlight" />
+                    <span>Lyric phrases spotlighted</span>
+                  </label>
+                  <label class="forge-toggle">
+                    <input type="checkbox" data-switch="micro_glitches" />
+                    <span>Micro-glitches for texture</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Model & Voice Stack -->
+              <div class="forge-group" data-group="model-stack">
+                <div class="forge-group-header">
+                  <span class="forge-group-title">Model &amp; Voice Stack</span>
+                  <span class="forge-group-sub">
+                    Locked into the exported payload.
+                  </span>
+                </div>
+
+                <div class="forge-model-grid">
+                  <!-- Music Engine -->
+                  <div class="forge-model-block">
+                    <h3 class="forge-model-title">Music Engine</h3>
+
+                    <label class="forge-model-label" for="music-provider"
+                      >Provider</label
+                    >
+                    <select id="music-provider" class="forge-model-input">
+                      <option value="">Select provider…</option>
+                      <option value="suno">Suno (v4.5 / v5)</option>
+                      <option value="udio">Udio</option>
+                      <option value="stable_audio">Stable Audio 2.x</option>
+                      <option value="openai_audio">OpenAI Audio (music)</option>
+                      <option value="aiode">Aiode (desktop)</option>
+                      <option value="custom">Custom / Local engine</option>
+                    </select>
+
+                    <label class="forge-model-label" for="music-model"
+                      >Model / preset</label
+                    >
+                    <input
+                      id="music-model"
+                      class="forge-model-input"
+                      type="text"
+                      placeholder="e.g. suno-v4.5-all, udio-main, stable-audio-2.0"
+                    />
+
+                    <label class="forge-model-label" for="music-max-length">
+                      Max length (seconds)
+                    </label>
+                    <input
+                      id="music-max-length"
+                      class="forge-model-input"
+                      type="number"
+                      min="30"
+                      max="600"
+                      value="120"
+                    />
+                  </div>
+
+                  <!-- Voice Engine -->
+                  <div class="forge-model-block">
+                    <h3 class="forge-model-title">Voice Engine (Kersali)</h3>
+
+                    <label class="forge-model-label" for="voice-provider"
+                      >Provider</label
+                    >
+                    <select id="voice-provider" class="forge-model-input">
+                      <option value="">Select provider…</option>
+                      <option value="openai_tts">OpenAI TTS</option>
+                      <option value="elevenlabs">ElevenLabs</option>
+                      <option value="google_tts">Google Cloud TTS</option>
+                      <option value="aws_polly">Amazon Polly</option>
+                      <option value="azure_speech">Azure Speech</option>
+                      <option value="deepgram">Deepgram</option>
+                      <option value="custom">Custom / Local TTS</option>
+                    </select>
+
+                    <label class="forge-model-label" for="voice-model">
+                      Voice model</label
+                    >
+                    <input
+                      id="voice-model"
+                      class="forge-model-input"
+                      type="text"
+                      placeholder="e.g. gpt-4o-mini-tts, eleven_multilingual_v2"
+                    />
+
+                    <label class="forge-model-label" for="voice-profile-id">
+                      Voice profile ID / name
+                    </label>
+                    <input
+                      id="voice-profile-id"
+                      class="forge-model-input"
+                      type="text"
+                      value="kersali-v1"
+                      placeholder="e.g. kersali-v1"
+                    />
+
+                    <label class="forge-model-label" for="voice-style-preset">
+                      Style preset</label
+                    >
+                    <input
+                      id="voice-style-preset"
+                      class="forge-model-input"
+                      type="text"
+                      placeholder="e.g. soft_intimate, high_energy"
+                    />
+
+                    <label class="forge-model-label" for="voice-seed">
+                      Seed (optional, for exact re-renders)
+                    </label>
+                    <input
+                      id="voice-seed"
+                      class="forge-model-input"
+                      type="number"
+                      placeholder="Random if blank"
+                    />
+                  </div>
+                </div>
+
+                <div class="forge-model-row">
+                  <div class="forge-model-inline">
+                    <label class="forge-model-label" for="audio-sample-rate">
+                      Output sample rate (Hz)
+                    </label>
+                    <input
+                      id="audio-sample-rate"
+                      class="forge-model-input"
+                      type="number"
+                      value="44100"
+                    />
+                  </div>
+
+                  <div class="forge-model-inline">
+                    <label class="forge-model-label" for="audio-format">
+                      Output format
+                    </label>
+                    <select id="audio-format" class="forge-model-input">
+                      <option value="mp3" selected>MP3</option>
+                      <option value="wav">WAV</option>
+                      <option value="flac">FLAC</option>
+                      <option value="aac">AAC</option>
+                      <option value="ogg">OGG</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Channel mixer -->
+              <div class="forge-group" data-group="mixer">
+                <div class="forge-group-header">
+                  <span class="forge-group-title">Channel Mixer</span>
+                  <span class="forge-group-sub">
+                    Slight influence on symbol weight & brightness.
+                  </span>
+                </div>
+
+                <div class="forge-mixer-grid">
+                  <div class="forge-mixer-channel">
+                    <span class="forge-mixer-label">Lead Vocal</span>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="mix_lead_vocal"
+                      class="forge-mixer-fader"
+                    />
+                  </div>
+
+                  <div class="forge-mixer-channel">
+                    <span class="forge-mixer-label">Backing Vocal</span>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="mix_backing_vocal"
+                      class="forge-mixer-fader"
+                    />
+                  </div>
+
+                  <div class="forge-mixer-channel">
+                    <span class="forge-mixer-label">Synth Bed</span>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="mix_synth_bed"
+                      class="forge-mixer-fader"
+                    />
+                  </div>
+
+                  <div class="forge-mixer-channel">
+                    <span class="forge-mixer-label">Bass</span>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="mix_bass"
+                      class="forge-mixer-fader"
+                    />
+                  </div>
+
+                  <div class="forge-mixer-channel">
+                    <span class="forge-mixer-label">Drums</span>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="mix_drums"
+                      class="forge-mixer-fader"
+                    />
+                  </div>
+
+                  <div class="forge-mixer-channel">
+                    <span class="forge-mixer-label">Noise Bed</span>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="0"
+                      data-dial="mix_noise_bed"
+                      class="forge-mixer-fader"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Bottom bar: export -->
+        <section class="forge-footer-bar">
+          <div class="forge-footer-left">
+            <span class="forge-footer-label">Combined Instruction Set</span>
+            <p class="forge-footer-text">
+              This compiles everything into a single .txt you can paste into
+              your AI orchestration layer or store with the track.
+            </p>
+          </div>
+          <div class="forge-footer-right">
+            <button class="btn primary" id="forge-export-btn">
+              Export Instruction Set (.txt)
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>© 2025 Fifth Format · Lyric-to-Experience Forge</span>
+      </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>

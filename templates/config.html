@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fifth Format – Config</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <div class="page">
+      <!-- Top navigation -->
+      <header class="top-nav">
+        <div class="logo-block">
+          <div class="logo-dot"></div>
+          <div class="logo-text">
+            <span class="brand">Fifth Format</span>
+            <span class="tagline">Config & Maintenance</span>
+          </div>
+        </div>
+
+        <div class="top-meta">
+          <a href="{{ url_for('home') }}" class="meta-pill">Experiences</a>
+          <a href="{{ url_for('forge') }}" class="meta-pill">The Forge</a>
+          <span class="meta-pill">Config</span>
+        </div>
+      </header>
+
+      <main>
+        <section class="upload">
+          <div class="upload-card">
+            <h2>Experience Config & Backup</h2>
+
+            <p>
+              This panel lets you
+              <strong>save your uploaded Experiences to disk</strong> and
+              <strong>rebuild them from audio files</strong> if
+              <code>experiences.json</code> is ever lost or corrupted.
+            </p>
+
+            <div class="field-row" style="margin-bottom: 10px;">
+              <div class="field">
+                <label>Base Experiences</label>
+                <p class="upload-note">
+                  {{ info.base_experiences }}
+                </p>
+              </div>
+              <div class="field">
+                <label>Uploaded Experiences</label>
+                <p class="upload-note">
+                  {{ info.uploaded_experiences }}
+                </p>
+              </div>
+              <div class="field">
+                <label>Total Experiences</label>
+                <p class="upload-note">
+                  {{ info.total_experiences }}
+                </p>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Upload folder</label>
+              <p class="upload-note">
+                {{ info.upload_folder }}
+              </p>
+            </div>
+
+            <div class="field">
+              <label>experiences.json</label>
+              <p class="upload-note">
+                {{ info.experiences_json }}
+                {% if info.experiences_json_exists %}
+                  – <strong>exists</strong>
+                {% else %}
+                  – <strong>not found</strong>
+                {% endif %}
+              </p>
+            </div>
+
+            {% if message %}
+            <p class="upload-note">
+              {{ message }}
+            </p>
+            {% endif %}
+
+            <div class="forge-footer-right" style="margin-top: 14px;">
+              <!-- Button: force save uploads to JSON -->
+              <form method="post" style="display:inline;">
+                <input type="hidden" name="action" value="save" />
+                <button type="submit" class="btn primary small">
+                  Save Uploaded Experiences Now
+                </button>
+              </form>
+
+              <!-- Button: rebuild from disk (destructive) -->
+              <form
+                method="post"
+                style="display:inline;"
+                onsubmit="return confirm('Rebuild from audio files on disk and overwrite current uploaded Experiences?');"
+              >
+                <input type="hidden" name="action" value="rebuild" />
+                <button type="submit" class="btn ghost small">
+                  Rebuild Uploads from Disk
+                </button>
+              </form>
+            </div>
+
+            <p class="upload-note" style="margin-top: 10px;">
+              <strong>Tip:</strong> Rebuild from disk will re-scan
+              <code>static/experiences/</code> and create “Recovered” Experiences
+              using the file names as titles. Use it only if
+              <code>experiences.json</code> is missing or broken.
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>© 2025 Fifth Format · Config Panel</span>
+      </footer>
+    </div>
+  </body>
+</html>

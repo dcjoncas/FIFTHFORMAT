@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{ exp.title }} – Fifth Format Experience</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: black;
+        color: #e5e7eb;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont,
+          "SF Pro Text", "Segoe UI", sans-serif;
+      }
+
+      /* Full-screen visualizer behind everything */
+      #ff-visualizer {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        display: block;
+      }
+
+      /* Overlay for text + controls */
+      .ff-overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 10;
+        padding: 6px 20px 24px;
+      }
+
+      /* Top: title + author */
+      .ff-top-bar {
+        text-align: center;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: radial-gradient(
+          circle at top,
+          rgba(15, 23, 42, 0.92),
+          rgba(15, 23, 42, 0.7)
+        );
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.8);
+        max-width: 520px;
+        width: 100%;
+      }
+
+      .ff-title {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .ff-subtitle {
+        margin: 4px 0 0;
+        font-size: 0.9rem;
+        opacity: 0.78;
+      }
+
+      /* Middle: lyrics + logo circle */
+      .ff-center {
+        flex: 1;
+        width: 100%;
+        max-width: 700px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 32px;
+      }
+
+      /* Lyric field container */
+      #lyric-stage {
+        position: relative;
+        width: 100%;
+        max-width: 90vw;
+        height: 220px;
+        pointer-events: none;
+      }
+
+      #lyrics-field {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+
+      .lyric-orb {
+        position: absolute;
+        max-width: 60%;
+        font-size: clamp(0.9rem, 1.2vw + 0.4rem, 1.3rem);
+        line-height: 1.35;
+        white-space: normal;
+
+        opacity: 0;
+        transform: translate3d(0, 0, 0) scale(0.9);
+        filter: blur(0.2px);
+
+        /* base glow; each orb can override via inline style */
+        text-shadow:
+          0 0 8px rgba(15, 23, 42, 0.8),
+          0 0 18px rgba(15, 23, 42, 0.7);
+
+        animation-name: lyricDrift;
+        animation-timing-function: ease-in-out;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+      }
+
+      .lyric-orb.current {
+        opacity: 1 !important;
+        transform: scale(1.08) translate3d(0, 0, 0) !important;
+        filter: blur(0);
+        text-shadow:
+          0 0 14px rgba(248, 250, 252, 0.95),
+          0 0 32px rgba(56, 189, 248, 0.95),
+          0 0 52px rgba(59, 130, 246, 0.9);
+        z-index: 2;
+      }
+
+      @keyframes lyricDrift {
+        0% {
+          opacity: 0;
+          transform: translate3d(0, 20px, 0) scale(0.85);
+        }
+        15% {
+          opacity: 0.9;
+        }
+        50% {
+          opacity: 1;
+          transform: translate3d(12px, -8px, 0) scale(1.02);
+        }
+        100% {
+          opacity: 0;
+          transform: translate3d(-10px, -36px, 0) scale(1.05);
+        }
+      }
+
+      /* Logo circle with 4 sectors */
+      .ff-circle-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .ff-circle {
+        position: relative;
+        width: 210px;
+        height: 210px;
+        border-radius: 50%;
+      }
+
+      .ff-circle-ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 2px solid rgba(244, 114, 182, 0.9);
+        box-shadow:
+          0 0 18px rgba(236, 72, 153, 0.8),
+          0 0 40px rgba(24, 24, 37, 0.9);
+        transition: box-shadow 0.25s, border-color 0.25s;
+      }
+
+      .ff-circle.is-playing .ff-circle-ring {
+        border-color: rgba(45, 212, 191, 0.95);
+        box-shadow:
+          0 0 24px rgba(45, 212, 191, 0.95),
+          0 0 60px rgba(8, 47, 73, 0.95);
+      }
+
+      .ff-circle-center {
+        position: absolute;
+        inset: 32%;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 30% 20%,
+          rgba(248, 250, 252, 0.12),
+          rgba(15, 23, 42, 0.98)
+        );
+        box-shadow:
+          0 0 18px rgba(15, 23, 42, 1),
+          0 0 30px rgba(15, 23, 42, 0.9);
+        pointer-events: none;
+      }
+
+      .ff-circle-sector {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: none;
+        background: radial-gradient(
+          circle at center,
+          rgba(15, 23, 42, 0.25),
+          transparent 70%
+        );
+        color: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+        transition: background 0.25s, box-shadow 0.25s, transform 0.12s;
+      }
+
+      .ff-circle-sector span {
+        position: absolute;
+        width: 1.8rem;
+        height: 1.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        font-size: 1.2rem;
+      }
+
+      /* Icon positions near the edge */
+      .sector-play span {
+        top: 22%;
+        left: 78%;
+        transform: translate(-50%, -50%);
+      }
+
+      .sector-ffwd span {
+        top: 78%;
+        left: 78%;
+        transform: translate(-50%, -50%);
+      }
+
+      .sector-rew span {
+        top: 78%;
+        left: 22%;
+        transform: translate(-50%, -50%);
+      }
+
+      .sector-next span {
+        top: 22%;
+        left: 22%;
+        transform: translate(-50%, -50%);
+      }
+
+      .ff-circle-sector:hover {
+        background: radial-gradient(
+          circle at center,
+          rgba(244, 114, 182, 0.5),
+          transparent 70%
+        );
+        box-shadow: 0 0 18px rgba(236, 72, 153, 0.95);
+        transform: scale(1.03);
+      }
+
+      .ff-circle-sector:active {
+        transform: scale(1.06);
+      }
+
+      /* Quadrants (clockwise from top-right) */
+      .sector-play {
+        clip-path: polygon(50% 50%, 100% 0, 100% 50%, 50% 50%);
+      }
+
+      .sector-ffwd {
+        clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%, 50% 50%);
+      }
+
+      .sector-rew {
+        clip-path: polygon(50% 50%, 0 50%, 0 100%, 50% 100%, 50% 50%);
+      }
+
+      .sector-next {
+        clip-path: polygon(50% 50%, 0 0, 0 50%, 50% 50%, 50% 0);
+      }
+
+      /* Tiny bright pink gems (top two) */
+      .ff-gem {
+        position: absolute;
+        width: 96px;
+        height: 96px;
+        border-radius: 50px;
+        transform: rotate(45deg);
+        pointer-events: none;
+      }
+
+      .ff-gem-play {
+        top: 28%;
+        left: 72%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        background: radial-gradient(circle at 30% 20%, #fce7f3, #ec4899);
+        box-shadow:
+          0 0 10px rgba(244, 114, 182, 1),
+          0 0 22px rgba(11, 207, 241, 0.95);
+      }
+
+      .ff-gem-next {
+        top: 28%;
+        left: 28%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        background: radial-gradient(circle at 30% 20%, #fce7f3, #ec4899);
+        box-shadow:
+          0 0 10px rgba(244, 114, 182, 1),
+          0 0 22px rgba(11, 207, 241, 0.95);
+      }
+
+      /* Bottom: subtle footer link */
+      .ff-bottom {
+        font-size: 0.8rem;
+        opacity: 0.7;
+      }
+
+      .ff-bottom a {
+        color: #cbd5f5;
+        text-decoration: none;
+      }
+
+      .ff-bottom a:hover {
+        text-decoration: underline;
+      }
+
+      /* Hide native audio (driven by circle controls) */
+      #exp-audio {
+        display: none;
+      }
+
+      /* Hidden visualizer controls (so visualizer.js can still hook in) */
+      .ff-hidden-controls {
+        display: none;
+      }
+
+      @media (max-width: 640px) {
+        .ff-circle {
+          width: 180px;
+          height: 180px;
+        }
+
+        .ff-circle-center {
+          inset: 34%;
+        }
+
+        #lyric-stage {
+          height: 260px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Full-screen visualizer -->
+    <canvas id="ff-visualizer"></canvas>
+
+    <!-- Main overlay: title, drifting lyrics, logo circle -->
+    <div class="ff-overlay">
+      <div class="ff-top-bar">
+        <p class="ff-title">{{ exp.title }}</p>
+        <p class="ff-subtitle">
+          {{ exp.author }} · Voice: {{ exp.voice }}
+        </p>
+      </div>
+
+      <div class="ff-center">
+        <!-- Lyric field -->
+        <div id="lyric-stage">
+          <div id="lyrics-field"></div>
+        </div>
+
+        <!-- Logo circle with 4 sectors + 2 gems -->
+        <div class="ff-circle-wrapper">
+          <div class="ff-circle" id="ff-logo-circle">
+            <div class="ff-circle-ring"></div>
+
+            <button
+              class="ff-circle-sector sector-play"
+              type="button"
+              data-action="play"
+            >
+              <span></span>
+            </button>
+
+            <button
+              class="ff-circle-sector sector-ffwd"
+              type="button"
+              data-action="ffwd"
+            >
+              <span></span>
+            </button>
+
+            <button
+              class="ff-circle-sector sector-rew"
+              type="button"
+              data-action="rew"
+            >
+              <span></span>
+            </button>
+
+            <button
+              class="ff-circle-sector sector-next"
+              type="button"
+              data-action="next"
+            >
+              <span></span>
+            </button>
+
+            <!-- Top two pink gems -->
+            <div class="ff-gem ff-gem-play"></div>
+            <div class="ff-gem ff-gem-next"></div>
+
+            <div class="ff-circle-center"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ff-bottom">
+        <a href="/">Back to Fifth Format</a>
+      </div>
+    </div>
+
+    <!-- Hidden audio element (driven by the logo circle controls) -->
+    <audio id="exp-audio">
+      <source src="{{ url_for('static', filename=exp.file) }}" />
+    </audio>
+
+    <!-- Hidden visualizer controls so visualizer.js can still attach -->
+    <div class="ff-hidden-controls">
+      <select id="visual-mode">
+        <option value="swirl">Swirl Burst</option>
+        <option value="nebula" selected>Nebula Waves</option>
+        <option value="rings">Pulse Rings</option>
+        <option value="particles">Particle Field</option>
+        <option value="grid">Laser Grid</option>
+        <option value="vortex">Energy Vortex</option>
+        <option value="fractal">Fractal Bloom</option>
+        <option value="aurora">Aurora Drift</option>
+        <option value="rain">Rainfall Lines</option>
+        <option value="matrix">Matrix Dust</option>
+      </select>
+
+      <input type="checkbox" id="auto-cycle" />
+      <input type="checkbox" id="hypnotic" />
+      <input type="checkbox" id="reactive" />
+
+      <div class="palette-selector">
+        <button class="palette-btn" data-p="0"></button>
+        <button class="palette-btn" data-p="1"></button>
+        <button class="palette-btn" data-p="2"></button>
+        <button class="palette-btn" data-p="3"></button>
+        <button class="palette-btn" data-p="4"></button>
+        <button class="palette-btn" data-p="5"></button>
+        <button class="palette-btn" data-p="6"></button>
+        <button class="palette-btn" data-p="7"></button>
+      </div>
+    </div>
+
+    <!-- Lyrics file path -->
+    <script>
+      window.lyricsUrl = "{{ url_for('static', filename=exp.lyrics) }}";
+      /* if you want "next" to jump somewhere real, set this in Flask */
+      window.nextExperienceUrl = "{{ url_for('home') }}";
+    </script>
+
+    <!-- Visualizer -->
+    <script src="{{ url_for('static', filename='visualizer.js') }}"></script>
+
+    <!-- Force default visual mode to "nebula" -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const sel = document.getElementById("visual-mode");
+        if (sel) {
+          sel.value = "nebula";
+          sel.dispatchEvent(new Event("change"));
+        }
+      });
+    </script>
+
+    <!-- Player + lyric field logic -->
+    <script
+      type="module"
+      src="{{ url_for('static', filename='player.js') }}"
+    ></script>
+  </body>
+</html>

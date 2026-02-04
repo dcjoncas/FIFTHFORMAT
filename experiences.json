@@ -1,0 +1,72 @@
+[
+  {
+    "id": "EXP-08",
+    "title": "Raging",
+    "author": "Recovered Upload",
+    "voice": "Recovered Voice",
+    "file": "experiences/Raging.mp3",
+    "lyrics": "experiences/Raging.txt",
+    "vibe": "Recovered from audio folder",
+    "package": "EXP – Recovered Experiences"
+  },
+  {
+    "id": "EXP-09",
+    "title": "Let me",
+    "author": "DJ",
+    "voice": "DJAI",
+    "file": "experiences/EXP-09.mp3",
+    "lyrics": "experiences/Let me.txt",
+    "vibe": "Shared by the community",
+    "package": "Camping"
+  },
+  {
+    "id": "EXP-10",
+    "title": "My Tree",
+    "author": "Santa",
+    "voice": "DJAI",
+    "file": "experiences/EXP-10.mp3",
+    "lyrics": "experiences/My Tree.txt",
+    "vibe": "Shared by the community",
+    "package": "Christmas"
+  },
+  {
+    "id": "EXP-11",
+    "title": "Same",
+    "author": "W.Wolf",
+    "voice": "DJAI",
+    "file": "experiences/EXP-11.mp3",
+    "lyrics": "experiences/Same.txt",
+    "vibe": "Shared by the community",
+    "package": "EXP – Fifth Format Core"
+  },
+  {
+    "id": "EXP-12",
+    "title": "Shut up",
+    "author": "W.Wolf",
+    "voice": "DJAI",
+    "file": "experiences/EXP-12.mp3",
+    "lyrics": "experiences/Shut up.txt",
+    "vibe": "Shared by the community",
+    "package": "EXP – Recovered Experiences"
+  },
+  {
+    "id": "EXP-13",
+    "title": "Wife",
+    "author": "W.Wolf",
+    "voice": "DJAI",
+    "file": "experiences/EXP-13.mp3",
+    "lyrics": "experiences/I know.txt",
+    "vibe": "Shared by the community",
+    "package": "EXP – Thankyou"
+  },
+  {
+    "id": "EXP-14",
+    "title": "She",
+    "author": "W.Wolf",
+    "voice": "YEYE",
+    "file": "experiences/EXP-14.mp3",
+    "lyrics": "experiences/She.txt",
+    "vibe": "Shared by the community",
+    "package": "EXP – Recovered Experiences"
+  }
+]
