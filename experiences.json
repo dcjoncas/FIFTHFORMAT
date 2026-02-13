@@ -68,5 +68,35 @@
     "lyrics": "experiences/She.txt",
     "vibe": "Shared by the community",
     "package": "EXP – Recovered Experiences"
+  },
+  {
+    "id": "EXP-15",
+    "title": "These Days",
+    "author": "W.Wolf",
+    "voice": "Kersali",
+    "file": "experiences/EXP-15.mp3",
+    "lyrics": "experiences/EXP-15.txt",
+    "vibe": "Shared by the community",
+    "package": "EXP – W.Wolf's Experiences"
+  },
+  {
+    "id": "EXP-16",
+    "title": "Heart Rock",
+    "author": "W.Wolf",
+    "voice": "Kersali",
+    "file": "experiences/EXP-16.mp3",
+    "lyrics": "experiences/EXP-16.txt",
+    "vibe": "Shared by the community",
+    "package": "Heart Rock"
+  },
+  {
+    "id": "EXP-17",
+    "title": "I know",
+    "author": "W.Wolf",
+    "voice": "Kersali",
+    "file": "experiences/EXP-17.mp3",
+    "lyrics": "experiences/EXP-17.txt",
+    "vibe": "Shared by the community",
+    "package": "Heart Rock"
   }
 ]

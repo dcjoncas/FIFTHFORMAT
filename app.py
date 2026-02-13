@@ -33,10 +33,15 @@ UPLOAD_FOLDER = os.path.join(app.static_folder, UPLOAD_SUBFOLDER)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 ALLOWED_EXTENSIONS = {"mp3", "wav", "ogg", "m4a"}
+ALLOWED_LYRICS_EXTENSIONS = {"txt"}
 
 
 def allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def allowed_lyrics_file(filename: str) -> bool:
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_LYRICS_EXTENSIONS
 
 
 # -----------------------------------------------------------------------------
@@ -356,32 +361,37 @@ def experience_player(exp_id):
 @app.route("/upload", methods=["POST"])
 @require_code
 def upload():
-    """Upload a new Experience (audio file + metadata)."""
+    """Upload a new Experience (audio file + optional lyrics .txt + metadata)."""
     global experiences
 
-    file = request.files.get("file")
-    if not file or file.filename == "":
+    audio_file = request.files.get("file")
+    if not audio_file or audio_file.filename == "":
         return redirect(url_for("home"))
 
-    if not allowed_file(file.filename):
+    if not allowed_file(audio_file.filename):
         return redirect(url_for("home"))
 
-    # Original filename (for better title & lyrics path)
-    original_name = file.filename
+    # Optional lyrics upload (.txt)
+    lyrics_file = request.files.get("lyrics_file")
+    if lyrics_file and lyrics_file.filename and not allowed_lyrics_file(lyrics_file.filename):
+        # Ignore invalid lyrics uploads (keep UX simple)
+        lyrics_file = None
+
+    # Original filename (for prettier default title + legacy lyrics matching)
+    original_name = audio_file.filename
     original_base, _ = os.path.splitext(original_name)  # e.g. "These days"
 
     # Generate a unique EXP id first
     new_id = next_experience_id()
 
-    # Use that id as the saved audio filename to avoid collisions
-    _, ext = os.path.splitext(file.filename)
+    # Use the id as the saved audio filename to avoid collisions
+    _, ext = os.path.splitext(original_name)
     ext = (ext or ".mp3").lower()
-    filename = secure_filename(f"{new_id}{ext}")  # e.g. EXP-06.mp3
+    audio_filename = secure_filename(f"{new_id}{ext}")  # e.g. EXP-06.mp3
+    audio_save_path = os.path.join(UPLOAD_FOLDER, audio_filename)
+    audio_file.save(audio_save_path)
 
-    save_path = os.path.join(UPLOAD_FOLDER, filename)
-    file.save(save_path)
-
-    # For title, build something pretty from original base
+    # Default title from original base (human-friendly)
     readable_name = (
         original_base.replace("_", " ").replace("-", " ").title()
         if original_base
@@ -400,16 +410,34 @@ def upload():
         else:
             package = "EXP – Shared Experiences"
 
-    # Lyrics: look for static/experiences/<original_base>.txt
-    lyrics_rel = f"{UPLOAD_SUBFOLDER}/{original_base}.txt"
+    # Lyrics path:
+    # 1) If a lyrics file was uploaded, store it as static/experiences/<EXP-ID>.txt
+    # 2) Else, try legacy matching: static/experiences/<original_base>.txt (raw or secure_filename)
+    # 3) Else, leave blank so UI shows "No lyrics configured".
+    lyrics_rel = ""
+    if lyrics_file and lyrics_file.filename:
+        lyrics_filename = secure_filename(f"{new_id}.txt")
+        lyrics_save_path = os.path.join(UPLOAD_FOLDER, lyrics_filename)
+        lyrics_file.save(lyrics_save_path)
+        lyrics_rel = f"{UPLOAD_SUBFOLDER}/{lyrics_filename}"
+    else:
+        legacy_raw = f"{original_base}.txt" if original_base else ""
+        legacy_safe = secure_filename(legacy_raw) if legacy_raw else ""
+        for candidate in [legacy_raw, legacy_safe]:
+            if not candidate:
+                continue
+            candidate_path = os.path.join(UPLOAD_FOLDER, candidate)
+            if os.path.exists(candidate_path):
+                lyrics_rel = f"{UPLOAD_SUBFOLDER}/{candidate}"
+                break
 
     new_exp = {
         "id": new_id,
         "title": title,
         "author": author,
         "voice": voice,
-        "file": f"{UPLOAD_SUBFOLDER}/{filename}",  # audio file (EXP-06.mp3 etc.)
-        "lyrics": lyrics_rel,                      # lyrics text file
+        "file": f"{UPLOAD_SUBFOLDER}/{audio_filename}",
+        "lyrics": lyrics_rel,
         "vibe": "Shared by the community",
         "package": package,
     }
@@ -421,11 +449,6 @@ def upload():
     save_uploaded_experiences(uploaded_only)
 
     return redirect(url_for("home"))
-
-
-# -----------------------------------------------------------------------------
-# Delete uploaded Experience (non-base only)
-# -----------------------------------------------------------------------------
 
 @app.route("/experience/<exp_id>/delete", methods=["POST"])
 @require_code
@@ -443,7 +466,7 @@ def delete_experience(exp_id):
 
     # Build full paths to audio and lyrics
     audio_path = os.path.join(app.static_folder, exp["file"])
-    lyrics_path = os.path.join(app.static_folder, exp["lyrics"])
+    lyrics_path = os.path.join(app.static_folder, exp["lyrics"]) if exp.get("lyrics") else ""
 
     for path in (audio_path, lyrics_path):
         try:

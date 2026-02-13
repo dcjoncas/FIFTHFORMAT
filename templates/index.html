@@ -317,11 +317,24 @@
                   required
                 />
                 <p class="upload-hint">
-                  For lyrics, place a <code>.txt</code> file in
-                  <code>static/experiences/</code> with the
-                  <strong>same name as your original audio</strong>. For
-                  example: <code>These days.mp3</code> →
-                  <code>These days.txt</code>.
+                  For lyrics, you can either upload a <code>.txt</code> file below,
+                  or place a <code>.txt</code> file in <code>static/experiences/</code> with the
+                  <strong>same name as your original audio</strong>. For example:
+                  <code>These days.mp3</code> → <code>These days.txt</code>.
+                </p>
+              </div>
+
+              <!-- NEW: Lyrics upload -->
+              <div class="field">
+                <label for="lyrics_file">Lyrics file (.txt) (optional)</label>
+                <input
+                  type="file"
+                  id="lyrics_file"
+                  name="lyrics_file"
+                  accept=".txt,text/plain"
+                />
+                <p class="upload-hint">
+                  Optional: upload a <code>.txt</code> lyrics file and we’ll attach it to this Experience automatically.
                 </p>
               </div>
 
